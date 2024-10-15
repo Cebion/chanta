@@ -1,0 +1,13 @@
+# El funcionamiento de este no ha sido verificado, puede no funcionar.
+
+OBJ = Controles.o Escena.o Grafico.o Juego.o main.o Mundo.o Protagonista.o\
+Animacion.o
+LIBS = -lSDL -lSDL_image -lSDL_mixer
+BIN = chanta
+CXXFLAGS = -DDATADIR="\"./\"" -DVERSION="\"0.1\""
+
+$(BIN): $(OBJ)
+	$(CXX) -o $(BIN) $(OBJ) $(LIBS)
+
+clear: 
+	$(RM) $(OBJ)

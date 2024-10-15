@@ -1,0 +1,21 @@
+Chanta Claus - Free 2D jump 'n run game
+
+Copyright (C) 2003-2005 Hugo Ruscitti
+Website: www.losersjuegos.com.ar
+License: GPL
+
+Installing:
+	Please read INSTALL file.
+
+Keys:
+	In game mode:
+		Cursor keys (up) = jump
+		Cursor keys (left - right) = run
+		Space - shot
+		'q' - quit
+	
+	In editor mode:
+		Cursor keys = move scroll
+		's' key = save level
+		'q' - quit
+	

@@ -1,0 +1,26 @@
+Requeriments:
+
+	* libSDL (*1)
+	* libSDL_image (*1)
+	* libSDL_mixer (*1)
+
+	(*1) = see the official web site of SDL www.libsdl.org
+
+
+Steps for root:
+
+	./configure
+	make
+	su
+	make install
+	exit
+	chanta
+
+
+Steps for other user (<user>):
+
+	./configure --prefix=/home/<user>/test/chanta
+	make
+	make install
+	cd /home/<user>/test/chanta/bin
+	./chanta

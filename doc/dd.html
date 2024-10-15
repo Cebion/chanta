@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+	<title>Documento de diseño - Chanta Claus</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<meta http-equiv="Content-languaje" content="es">
+	<meta name="generator" content="vim 6.3">
+	<meta name="author" content="Hugo Luis Ruscitti">
+</head>
+
+<body>
+
+<!-- 
+	ver:	0.3
+	fecha:	15-06-2005
+	autor:	Hugo Ruscitti 
+-->
+
+<h1>Documento de diseño - Chanta Claus</h1>
+
+<h2>Créditos</h2>
+
+<ul>
+	<li>Autor de este documento: Hugo Ruscitti</li>
+</ul>
+
+
+<h2>Introducción:</h2>
+
+	<p>Chanta Claus es un videojuego navideño de plataformas muy simple.
+	La primer versión fue desarrollada para sistemas DOS utilizando 
+	<em>Div Games Studio</em>.</p>
+
+	<p>En esta nueva versión buscamos rehacer el videojuego para otros 
+	sistemas operativos como GNU/Linux. En lugar de utilizar el antiguo 
+	código fuente lo creamos nuevamente, desde cero, utilizando otras 
+	herramientas de trabajo como:</p>
+	
+	<ul>
+		<li>GNU/Linux</li>
+		<li>C++</li>
+		<li>SDL</li>
+		<li>VIM</li>
+		<li>Gimp!</li>
+	</ul>
+
+
+<h2>Objetivos:</h2>
+
+	<p>En su modo "1 solo jugador", nuestro protagonista debe recolectar 
+	varios billetes de dólares dispersos en cada nivel. Cuando llegamos a 
+	recolectar todos, podremos acceder al próximo nivel.</p>
+
+	<p>Cada nivel tiene varios enemigos y municiones, tener municiones nos 
+	permite "dispararle" a los enemigos y quitarlos del camino.</p>
+
+	<p>Podemos perder vidas si colisionamos con un enemigo o si caemos de 
+	las plataformas inferiores.</p>
+
+	<p>Luego de perder 3 vidas perdemos la partida.</p>
+
+<h2>Personajes:</h2>
+
+	<p>El protagonista del juego puede ser elegido por el usuario al 
+	comenzar el juego, sólo hay 2 posibilidades:</p>
+	
+	<ul>
+		<li>Chanta = un imitador de Papá Noel (o Santa Claus), que en 
+		realidad sólo busca dinero fácil.</li>
+
+		<li>Snow = un muñeco de nieve con "antifaz", que busca en cada 
+		nivel lo mismo que "Chanta".</li>
+	</ul>
+	
+	<p>Los enemigos se dividen en 2 grupos: aquellos que pueden disparar y 
+	otros que simplemente "caminan" por el escenario.</p>
+
+<h2>Teclas:</h2>
+
+	<p>La barra espaciadora se utiliza para disparar, si tenemos 
+	municiones.</p>
+
+	<p>Con los direccionales del teclado podemos caminar y saltar.</p>
+	
+	<p>Opcionalmente existen algunas teclas que imitan el comportamiento 
+	de otras. La teclas 'z' y 'c' nos permiten saltar y 'x' disparar.</p>
+
+<h2>Niveles:</h2>
+
+	<p>Cuenta con 31 niveles, cada uno de ellos tiene un desplazamiento o 
+	<em>scroll</em> de 4 pantallas (2 horizontales y 2 verticales).
+
+<h2>Gráficos:</h2>
+	
+	<h3>Modos de video:</h3>
+	
+	<p>La pantalla tiene un tamaño de 640x480 pixeles, pero es posible 
+	utilizar un modo de video de 320x240 pixeles (los gráficos se 
+	reducen).</p>
+
+
+	<h3>Técnica de impresión:</h3>
+	
+	<p>Se ha implementado una única técnica, Double Buffer, ya que los 
+	niveles y menús están en constante movimiento.</p>
+
+
+<h2>Opciones:</h2>
+
+	<p>Las opciones de video se pueden alterar "dentro" del juego o desde 
+	los párametros de la linea de comandos, no es necesario un fichero 
+	ejecutable separado para esto.</p>
+
+	<p>Cualquier cambio de configuración tiene alcance hasta que termina 
+	la ejecución del programa.</p>
+
+	<p>Para conocer los parametros del programa se debe ejecutar 
+	"./chanta --help"</p>
+	
+	<p>Dentro del juego algunas opciones se pueden alterar mediante las 
+	teclas F#.</p>
+
+<h2>Estados del juego o Escenas:</h2>
+
+	<h3>Introducción:</h3>
+
+		<p>Se muestra el logo del grupo LosersJuegos con una animación 
+		simple.</p>
+	
+	<h3>Menú:</h3>
+		
+		<p>Comienza con una animación pero es funcional en pocos 
+		segundos. Desde aquí podemos acceder a las escenas "juego", 
+		"créditos", "opciones" o salir por completo.</p>
+	
+	<h3>Juego:</h3>
+		
+		<p>Nuestra partida, podemos regresar al menú (si perdemos o 
+		cancelamos el juego) o pasar a la "final"</p>
+	
+	<h3>Final:</h3>
+	
+		<p>Nos muestra una animación y regresa al menú.</p>
+	
+	<h3>Créditos:</h3>
+
+		<p>Información sobre el desarrollo, solo puede ser seguido por 
+		el regreso al menú.</p>
+	
+	<h3>Opciones:</h3>
+		
+		<p>Nos permite alterar el modo de video, alternar entre 
+		"pantalla completa"/"ventana" y habilitar o deshabilitar las 
+		músicas y sonidos. Pero al igual que Créditos, solo puede 
+		enviarnos nuevamente al menú.</p>
+
+	<h3>Records:</h3>
+	
+		<p>Lista los mejores puntajes, tomando cada uno de ellos de un 
+		archivo local del usuario.</p>
+
+<h2>Resumen:</h2>
+	
+	<p>El juego Chanta Claus debe cumplir con estas caracteristicas:</p>
+
+	<ul>
+		<li>Licencia GPL en cada componente (100% Software Libre).</li>
+		<li>Versiones para GNU/Linux y Windows como mínimo.</li>
+		<li>Pantallas con desplazamiento (scroll).</li>
+		<li>2 protagonistas y varios enemigos.</li>
+		<li>31 niveles.</li>
+		<li>Editor de niveles integrado.</li>
+		<li>Soporte para varios idiomas.</li>
+		<li>Actualizaciones reportadas y documentadas.</li>
+		<li>Utiliza SDL, SDL_image y SDL_Mixer.</li>
+		<li>Desarrollado con el lenguaje C++</li>
+		<li>Un estilo de programación uniforme en cada fuente.</li>
+	</ul>
+
+</body>
+</html>

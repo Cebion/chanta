@@ -1,0 +1,33 @@
+20-07-05 - Hugo Ruscitti
+	- Mejoras en el manejo de los archivos de niveles.
+
+17-07-05 - Hugo Ruscitti
+	- Nuevo objeto Item.
+	- Cadenas de texto en el objeto Cadena.
+	- Lista de procesos (enemigos e items).
+
+13-07-05 - Hugo Ruscitti
+	- Mejoras en el editor de niveles.
+	- Primer implementación de Fuente.
+	- Nuevo archivo de documentación (doc/como_funciona).
+
+12-06-05 - Hugo Ruscitti
+	- Scroll básico.
+	- Editor de niveles.
+	- Cambios entre escenas.
+
+08-06-05 - Hugo Ruscitti
+	- Primer implementación del objeto Nivel.
+	- Colisiones entre objetos.
+	- Múltiples procesos.
+
+06-06-05 - Hugo Ruscitti
+	- Objeto Galeria e Imagen.
+
+30-05-05 - Hugo Ruscitti
+	- clase Grafico para gestinar las grillas de sprites.
+	- Animaciones.
+
+19-05-05 - Hugo Ruscitti
+	- Implementación de automake.
+	- Versión inicial.

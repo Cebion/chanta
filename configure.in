@@ -1,0 +1,66 @@
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT(src/main.cpp)
+
+PACKAGE=chanta
+VERSION=0.15
+
+AM_INIT_AUTOMAKE($PACKAGE,$VERSION)
+
+AC_PROG_CXX
+AC_STDC_HEADERS
+AC_PROG_INSTALL
+
+dnl Para soportar varios idiomas con "gettext"
+dnl ALL_LINGUAS="es"
+dnl AM_GNU_GETTEXT
+
+GETTEXT_PACKAGE=$PACKAGE
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE([GETTEXT_PACKAGE],[],[...])
+
+localedir="${datadir}/locale/"
+AC_SUBST(localedir)
+
+data_dir="$datadir/$PACKAGE/"
+AC_SUBST(data_dir)
+
+version="$VERSION"
+AC_SUBST(version)
+
+
+
+
+dnl Busca las bibliotecas SDL
+have_SDL=no
+AC_CHECK_LIB(SDL, SDL_Init, have_SDL=yes)
+if test x$have_SDL != xyes; then
+	AC_MSG_ERROR([* Can't find SDL library try: 
+	http://www.libsdl.org])
+fi
+
+
+dnl Busca las bibliotecas SDL_mixer
+have_SDLmixer=no
+AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio, have_SDLmixer=yes)
+if test x$have_SDLmixer != xyes; then
+	AC_MSG_ERROR([* Can't find the SDL_mixer library try: 
+	http://www.libsdl.org])
+fi
+
+
+dnl Busca las bibliotecas SDL_image
+have_SDLimage=no
+AC_CHECK_LIB(SDL_image, IMG_Load_RW, have_SDLimage=yes)
+if test x$have_SDLimage != xyes; then
+	AC_MSG_ERROR([*** Can't find the SDL_image library try:
+	http://www.libsdl.org])
+fi
+
+AC_OUTPUT([
+Makefile 
+doc/Makefile
+src/Makefile 
+src/ima/Makefile
+src/data/Makefile
+])

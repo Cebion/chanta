@@ -1,0 +1,207 @@
+Como Funciona - Chanta Claus
+
+Autor : Hugo Ruscitti.
+
+fecha de inicio: 04-07-05
+última actualización: 04-07-05
+
+
+
+Introducción:
+
+	Este documento explica el funcionamiento general de la implementación 
+	del juego Chanta Claus.
+	
+	A fin de simplificar las explicaciones, los ejemplos simplemente 
+	reflejan el "concepto" de funcionamiento. La implementación del 
+	programa es mucho más compleja que la explicación de este documento. 
+	Para estudiar en detalle el funcionamiento debe leer el código fuente 
+	del programa que se encuentra disponible en el sitio web: 
+	http://www.losersjuegos.com.ar
+
+
+Al iniciar el programa:
+
+	Mundo es el objeto principal, contiene todo lo que podemos encontrar 
+	en el juego.
+
+	Cuando comienza el programa Mundo recibe las opciones iniciales del 
+	juego, estos valores se pueden alterar durante la ejecución del programa
+	con las teclas F#. Los cambios de configuración suelen ser aplicados 
+	por otros objetos, por ejemplo al cambiar de modo gráfico Mundo informa 
+	este cambio a las escenas y al conjunto de gráficos (Galeria).
+
+	Mundo contiene a Galeria y le indica, al iniciar, que cargue todos 
+	las imágenes del juego.
+
+	Galeria contiene objetos Imagen, cada Imagen es una grilla con todos 
+	los cuadros de animación de cada objeto del juego. Si queremos imprimir
+	el cuadro de animación 0 del protagonista en la posición (X=30, Y=50) 
+	debemos tener una referencia a la galería general de gráficos:
+
+		ima_prot = galeria->get_imagen(PROTAGONISTA);
+		ima_prot->imprimir(screen, 0, 30, 50).
+
+	El manejo de gráficos es similar al de las fuentes, Galeria contiene 
+	objetos Fuente que se pueden obtener mediante:
+		
+		fuente = galeria->get_fuente(CHICA);
+	
+	e imprimir sobre una superficie (ima) mediante:
+
+		fuente->imprimir(ima, "hola", 50, 100);
+
+Modos de video:
+
+	La posición (30, 50) no necesariamente representa 30 y 50 píxeles. El 
+	juego soporta 2 modos de video, 320x240 y 640x480. Cuando el modo de 
+	video es 640x480 (30,50) es un punto situado a 30 y 50 píxeles de 
+	la esquina superior izquierda de la pantalla, pero si el modo de 
+	video es 320x240, (30,50) es un punto situado a 15 y 30 píxeles.
+
+	Los cálculos Lógicos del juego nunca varían. Independientemente del 
+	modo de video, todo cálculo se realiza asumiendo una pantalla de 
+	640x480. 
+	
+	El objeto Imagen conoce el modo de video actual y adapta estas 
+	coordenadas al modo actual en el momento de imprimir. Por esa razón, 
+	si el modo es 320x240, Imagen divide cada componente de la coordenada 
+	por 2.
+
+
+Escenas o estados del juego:
+
+	Cada estado del juego es una Escena (clase base): menu, ayuda, editor, 
+	introducción etc.
+
+	Toda escena deriva de Escena y es instanciada por Mundo al comenzar el 
+	programa.
+
+	Mundo selecciona la escena actual y la mantiene en ejecución, pero 
+	mundo no administra el momento de realizar el cambio. Cada escena 
+	tiene una referencia a Mundo para indicarle el momento adecuado 
+	para cambiar a otra escena, por ejemplo:
+
+		Si estamos en el menú principal del juego:
+
+			si pulsan opción jugar
+				hacer mundo->cambiar_escena(JUEGO)
+
+			si pulsan opción configuración
+				hacer mundo->cambiar_escena(CONFIGURACION).
+
+
+Durante la ejecución del programa:
+
+	Mundo mantiene el programa en ejecución desde el método 
+	bucle_principal, ahí realiza la tarea gestionar eventos y mantener la 
+	velocidad constante de todo el juego.
+
+	Si bien Mundo mantiene todas las escenas del programa, sólo actualiza 
+	e imprime la escena actual, mediante llamadas a:
+
+		actual->actualizar()
+	
+	y 
+		actual->imprimir();
+	
+	En el mejor de los casos la cantidad de llamadas a actualizar será 
+	igual a la cantidad de llamadas a imprimir. Si la velocidad del equipo 
+	no puede realizar esa tarea, se reduce la cantidad de llamadas a 
+	'imprimir' provocando 'saltos de cuadros'.
+
+
+Escena Juego:
+
+	En general, Juego sólo realiza la carga de cada nivel (con sus objetos) 
+	y gestiona cuando debe terminar del juego. Para ello contiene 3 
+	objetos principales: Nivel, Barra y Procesos. 
+
+Barra:
+	Barra contiene e imprimir varios contadores del juego:
+	
+		- cantidad de vidas.
+		- contador de tiempo (se reinicia con el paso de nivel y la 
+		pérdida de una vida).
+		- puntos acumulados desde que comenzó la partida.
+		- cantidad de items total del nivel y los restantes.
+	
+	Barra es notificada sobre la pérdida de vidas, captura de Item. Ante 
+	cada notificación actualiza los contadores y determina las acciones 
+	de Juego, por ejemplo:
+
+		- si no hay mas items para capturar le indica a Juego que 
+		avance al siguiente nivel.
+
+		- si no hay mas tiempo le indica al protagonista que tiene 
+		que perder su vida.
+		
+		- si el protagonista no tiene mas vidas le indica a Juego que 
+		termine la partida.
+
+Nivel:
+	Nivel se encarga de cargar y administrar los niveles de todo el juego.
+
+	Puede imprimir todos los bloques del nivel por completo, desplazar 
+	la cámara, verificar donde se encuentran los bloques colisionables e 
+	indicar donde se deben crear los personajes cuando se inicia el nivel.
+
+
+Procesos:
+
+	Procesos contiene a todos los Actores de cada nivel, entre ellos:
+	
+		- 1 objeto de clase Protagonista
+		- N objetos de clase Enemigo (clase base)
+		- N objetos de clase Tiro
+		- N objetos de clase Item
+	
+	Juego le indica a Procesos que actualice a todos los personajes en 
+	cada ciclo lógico y que además verifique y notifique las colisiones 
+	entre ellos.
+
+	Cuando Procesos detecta una colisión, puede ocurrir:
+
+		Protagonista colisiona con Item: 
+		
+			* Le informa a Item que existe una colisión, no es 
+			necesario indicarle contra quién, se asume Protagonista.
+			
+			* Le indica a Juego->Barra que reste un item de su 
+			contador. A su vez, si Barra detecta que no hay mas 
+			items (contador = 0), le pide a Juego que se completo 
+			ese nivel.
+
+			* nota: Protagonista no es notificado de la colisión.
+
+		Protagonista con Enemigo:
+			
+			* Informa sobre la colisión a Protaginista, para que 
+			este pase a estado MORIR. El protagonista, luego de 
+			morir, informa sobre la pérdida de la vida a 
+			Juego->Barra, este objeto determina si el juego debe 
+			continuar, o no, ya que Barra es el único objeto que 
+			mantiene el contador de vidas a través de todos 
+			los niveles.
+
+		Tiro con Enemigo:
+			
+			* Le informa a ambos de la colisión.
+			* Le indica a Menu que incremente el puntaje.
+
+Fuente:
+
+	Está contenido en Galeria, que lo inicia.
+
+	Todas las imágenes de cada letra se encuentran en un único archivo, 
+	en forma de guilla. Pero, a diferencia de los objetos Imagen, Fuente 
+	permite definir celdas de diferentes tamaños.
+
+	Las grillas de fuentes tienen 2 lineas horizontales auxiliares, que 
+	definen donde comienza y termina cada caracter (verifique el archivo 
+	chica.png como ejemplo). 
+	
+	Cuando Fuente tiene que cargar una nueva imagen lee estas primeras 
+	lineas y almacena en un vector la posición de cada letra dentro de la 
+	grilla. Estas posiciones son utilizadas al momento de imprimir alguna 
+	cadena mediante Fuente :: imprimir.

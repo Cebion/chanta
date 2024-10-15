@@ -1,0 +1,276 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+	<title>Estilo de programación - Chanta Claus</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<meta http-equiv="Content-languaje" content="es">
+	<meta name="generator" content="vim 6.3">
+	<meta name="author" content="Hugo Luis Ruscitti">
+</head>
+
+<body>
+
+<h1>Estílo de programación (versión 0.1)</h1>
+
+<h2>Créditos</h2>
+
+<ul>
+	<li>Autor de este documento: Hugo Ruscitti</li>
+</ul>
+
+<h2>Introducción:</h2>
+
+	<p>El estilo de programación se refiere a la forma de organizar y 
+	tabular el código fuente.</p> 
+	
+	<p>Como los archivos fuente (.cpp y .h) pueden ser modificados por 
+	muchas personas, es importante que los programadores compartan el mismo 
+	<em>estilo de programación</em>, generando así código fuente uniforme y 
+	fácil de entender.</p>
+
+
+<h2>Comentario inicial:</h2>
+
+	<p>Debe existir una referencia al dueño del Copyright (cada proyecto 
+	tiene un único dueño), el nombre del proyecto y la licencia utilizada. 
+	En la mayoría de los casos utilizamos GPL, con lo cual, cada archivo 
+	comienza con el siguiente comentario:</p>
+
+	<pre>
+/*
+ * Chanta Claus - Free 2D jump 'n run video game
+ * Codename: chanta
+ * 
+ * Copyright (c) 2004, 2005 Hugo Ruscitti
+ * web site: http://www.losersjuegos.com.ar
+ * 
+ * Chanta Claus is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Chanta Claus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+	</pre>
+
+
+<h2>Tabulación:</h2>
+
+	<p>Se utilizan tabulaciones para remarcar la presencia de un 
+	bloque, utilizando <code>-TAB-</code> en lugar de espacios, por 
+	ejemplo:</p>
+
+<pre>
+int funcion (void)
+{
+	// linea tabulada
+	// segunda linea
+	if (condicion) 
+	{
+		// nuevo bloque tabulado
+		//
+	}
+}
+</pre>
+
+	<p>Si quiere que las tabulaciones sean mas pequeñas altere la 
+	configuración de su editor. En Vim se realiza con 
+	<code>set tabsize=n</code>, donde <code>n</code> es el tamaño del 
+	espaciado de la tabulación.</p>
+
+	<p>Si utiliza espacios no tendremos esta facilidad, la mayoría 
+	preferimos las tabulaciones de tamaño 8.</p>
+
+
+<h2>Idioma:</h2>
+
+	<p>Los mensajes que se muestran al usuario deben estar en Inglés.</p>
+
+	<p>Mediante <em>gettext</em> se dará soporte al resto de los idiomas.<p>
+
+	<p>Si usted no cuenta con <em>gettext</em> en su equipo defina el 
+	archivo int.h con el siguiente contenido:</p>
+
+	<pre>
+#define _(x) (x)
+#define N_(x) (x)
+	</pre>
+	
+	<p>Luego, cuando quiera imprimir alguna cadena utilice printf:</p>
+
+	<pre>
+prinf(_("error, can't load image %s\n"), path_image);
+	</pre>
+	
+	<p>Evite el uso de cout, queremos que el orden de los parámetros se 
+	pueda modificar, algunos idiomas así lo requieren.</p>
+
+<h2>Identificadores:</h2>
+
+	<p>Los nombres de variables deben ser simples y claros, tienen
+	que representar la lógica del dato contenido, por ejemplo:</p>
+
+	<pre>
+float velocidad;
+int vidas;
+int puntos;
+class Pelota pelota;
+	</pre>
+
+	<p>Las funciones se escriben en minúscula y si contienen varias
+	palabras se dividen con guiones bajos:</p>
+
+	<pre>
+int iniciar (int resolucion, bool full_screen);
+void salir (void);
+void bucle_principal (void);
+	</pre>
+	
+	<p>Las clases comienzan con Mayúsculas.</p>
+	
+	<p>No utilice Notación Húngara, ni siquiera levemente anteponiendo una 
+	'c' delante del identificador de una clase:</p>
+
+	<pre>
+class Tile (en lugar de ctile)
+struct Player (en lugar de stplayer)
+char name[100] (en lugar de czname)
+	</pre>
+
+<h2>Llaves y bloques:</h2>
+
+	<p>Las llaves en las funciones comienzan en el siguiente renglón,
+	recuerde tabular el contenido del bloque:</p>
+
+	<pre>
+void salir (void)
+{
+	printf (_("Thanks for play this game\n"));
+	printf (_("Shutdown system\n"));
+}
+</pre>
+
+	<p>Este criterio es idéntico en el resto de los casos:</p>
+
+	<pre>
+if (vidas &lt; 1) 
+{
+	printf (_("game over\n"));
+	salir ();
+} 
+else 
+{
+	vidas --;
+	print (_("lives %d\n"), vidas);
+}
+</pre>
+
+
+<h2>Modularización:</h2>
+
+	<p>No se deben exceder las 80 columnas de código, llegado
+	el caso se debe modularizar aún mas el código.</p>
+
+	<p>Aunque existe una excepción: en algunos casos es inevitable 
+	exceder el límite, si luego de varios intentos no puede 
+	revertir esta situacion puede realizar un salto de linea
+	con <code>\</code> y luego <code>-ENTER-</code>.</p>
+
+<pre>
+int Mundo :: ejemplo (int codigo, ................., \
+	char * mensaje);
+</pre>
+
+<h2>Enumeraciones:</h2>
+
+	<p>Para simplificar la lectura de las enumeraciones se deben 
+	ordenar en filas:</p>
+	
+	<pre>
+enum estados 
+{
+	PARADO, \
+	CORRIENDO, \
+	SALTANDO, \
+	CAMINANDO \
+};
+</pre>
+
+	<p>Para este caso es recomendable utilizar los valores de la 
+	enumeración en variables o parámetros de tipo "enum estado", en
+	lugar de variables de tipo int. Así el compilador puede 
+	comparar los tipos de datos, en tiempo de compilación, y prevenir 
+	errores.</p>
+
+<h2>Comas y espacios:</h2>
+
+	<p>Luego de cada coma (,) debe agregar un espacio:</p>
+
+	<pre>
+int reiniciar (int tipo, int energia, int vidas);
+	</pre>
+
+	<p>Los operadores también tienen que separarse con espacios:</p>
+
+	<pre>
+for (i = 0; i &lt; 10; i ++)
+	printf ("i = %d\n", i);
+	</pre>
+
+	<p>Con excepcion de los siguientes:</p>
+
+<pre>
+.
+-&gt;
++=
+-=
+</pre>
+
+<h2>Comentarios:</h2>
+
+	<p>Cada función tiene que comenzar con un comentario que respete la 
+	siguiente regla:</p>
+
+	<pre>
+/*!
+ * \brief Descripción de la función en castellano
+ * \author Nombre del autor
+ * \return 1 en caso de error
+ */
+int imprimir (char *mensaje)
+{
+	[...]
+	</pre>
+
+	<p>
+	Las clases o estructuras se comentan de forma similar:
+	</p>
+
+	<pre>
+/*!
+ * \brief Descripción de la tarea de la clase
+ */
+class player
+{
+	private:
+		void init (char *name, struct pos pos);
+		[...]
+
+	</pre>
+	
+	<p>Estos comentarios comenzados con (/*!) son procesados por el 
+	programa Doxygen para generar la documentación del proyecto.</p>
+
+	<p>El resto de los comentarios, internos a una función, no son 
+	necesarios. Cada función cumple una tarea muy especifica, no 
+	se deben explicar los cáculos internos de cada una.</p>
+
+<body>
+</html>
